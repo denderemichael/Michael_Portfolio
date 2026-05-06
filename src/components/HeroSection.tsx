@@ -9,7 +9,7 @@ const HeroSection = () => {
   });
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/config")
+    fetch(`${import.meta.env.VITE_API_URL}/api/config`)
       .then((res) => res.json())
       .then((data) => {
         if (data.hero_title) {

@@ -6,7 +6,7 @@ const AboutSection = () => {
   });
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/about")
+    fetch(`${import.meta.env.VITE_API_URL}/api/about`)
       .then((res) => res.json())
       .then((data) => {
         if (data.bio) {
