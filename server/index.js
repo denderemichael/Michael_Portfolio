@@ -8,10 +8,19 @@ const port = 5000;
 
 // Supabase configuration - Use Service Role Key for Admin actions
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
+const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const anonKey = process.env.SUPABASE_ANON_KEY;
+
+const supabaseKey = serviceKey || anonKey;
+
+if (serviceKey) {
+  console.log("🔐 Backend is using: SERVICE_ROLE_KEY (Admin Mode)");
+} else {
+  console.log("⚠️ Backend is using: ANON_KEY (Limited Mode - Deletes/Inserts may fail)");
+}
 
 if (!supabaseUrl || !supabaseKey) {
-  console.error("❌ Error: Please update server/.env with your Supabase credentials!");
+  console.error("❌ Error: Missing Supabase URL or Key in server/.env");
   process.exit(1);
 }
 
@@ -32,11 +41,17 @@ app.get('/api/projects', async (req, res) => {
 });
 
 app.post('/api/projects', async (req, res) => {
+  console.log("📝 Incoming Project Data:", req.body);
   try {
     const { data, error } = await supabase.from('projects').insert([req.body]).select();
-    if (error) throw error;
+    if (error) {
+      console.error("❌ Supabase Insert Error:", error.message);
+      throw error;
+    }
+    console.log("✅ Project created:", data[0]);
     res.status(201).json(data[0]);
   } catch (err) {
+    console.error("❌ API POST Error:", err.message);
     res.status(500).json({ error: err.message });
   }
 });
