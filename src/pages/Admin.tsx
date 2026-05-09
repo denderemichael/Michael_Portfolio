@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useProjects } from "@/hooks/useProjects";
 import { toast } from "sonner";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
 const Admin = () => {
   const navigate = useNavigate();
   const [session, setSession] = useState<any>(null);
@@ -39,7 +41,7 @@ const Admin = () => {
   const fetchData = async () => {
     try {
       // Fetch Hero Config
-      const configRes = await fetch(`${import.meta.env.VITE_API_URL}/api/config`);
+      const configRes = await fetch(`${API_URL}/api/config`);
       const configData = await configRes.json();
       setHero({ 
         title: configData.hero_title || "", 
@@ -48,7 +50,7 @@ const Admin = () => {
       });
       
       // Fetch About content
-      const aboutRes = await fetch(`${import.meta.env.VITE_API_URL}/api/about`);
+      const aboutRes = await fetch(`${API_URL}/api/about`);
       const aboutData = await aboutRes.json();
       setAbout({ bio: aboutData.bio || "" });
     } catch (err) {
@@ -63,17 +65,17 @@ const Admin = () => {
 
   const handleUpdateHero = async (e: React.FormEvent) => {
     e.preventDefault();
-    await fetch(`${import.meta.env.VITE_API_URL}/api/config`, {
+    await fetch(`${API_URL}/api/config`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ key: "hero_title", value: hero.title }),
     });
-    await fetch(`${import.meta.env.VITE_API_URL}/api/config`, {
+    await fetch(`${API_URL}/api/config`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ key: "hero_subtitle", value: hero.subtitle }),
     });
-    await fetch(`${import.meta.env.VITE_API_URL}/api/config`, {
+    await fetch(`${API_URL}/api/config`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ key: "hero_description", value: hero.description }),
@@ -83,7 +85,7 @@ const Admin = () => {
 
   const handleUpdateAbout = async (e: React.FormEvent) => {
     e.preventDefault();
-    await fetch(`${import.meta.env.VITE_API_URL}/api/about`, {
+    await fetch(`${API_URL}/api/about`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(about),
@@ -94,7 +96,7 @@ const Admin = () => {
   const handleAddProject = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/projects`, {
+      const response = await fetch(`${API_URL}/api/projects`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newProject),
@@ -115,7 +117,7 @@ const Admin = () => {
   const handleDeleteProject = async (id: string) => {
     if (!confirm("Are you sure you want to delete this project?")) return;
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/projects/${id}`, {
+      const response = await fetch(`${API_URL}/api/projects/${id}`, {
         method: "DELETE",
       });
       if (response.ok) {

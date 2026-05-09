@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 
+const API_URL = import.meta.env.VITE_API_URL || "";
+
 const HeroSection = () => {
   const [config, setConfig] = useState({
     hero_title: "Michael Dendere",
@@ -9,7 +11,7 @@ const HeroSection = () => {
   });
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/api/config`)
+    fetch(`${API_URL}/api/config`)
       .then((res) => res.json())
       .then((data) => {
         if (data.hero_title) {
